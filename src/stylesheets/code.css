@@ -1,0 +1,39 @@
+.javascript {
+    color: #E8E9F3; 
+}
+
+.javascript .hljs-keyword {
+    color: #FF5D8F; 
+}
+
+.javascript .hljs-built_in {
+    color: #64D9EF; 
+}
+
+.javascript .hljs-function {
+    color: #2ECC71; 
+}
+
+.javascript .hljs-string {
+    color: #FFE873; 
+}
+
+.javascript .hljs-number {
+    color: #9B59B6; 
+}
+
+.javascript .hljs-comment {
+    color: #A8E6CF; 
+}
+
+.javascript .hljs-literal {
+    color: #9B59B6; 
+}
+
+.javascript .hljs-params {
+    color: #E67E22; 
+}
+
+.javascript .hljs-punctuation {
+    color: #E8E9F3; 
+}
