@@ -4,6 +4,7 @@ import NotFound from './Routes/NotFound';
 import Login from './Routes/Login';
 import SignUp from './Routes/SignUp';
 import Resources from './Routes/Resources';
+import ResourcePage from './Routes/ResourcePage';
 function AppRoutes () {
   return (
     <Routes>
@@ -11,6 +12,7 @@ function AppRoutes () {
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} /> 
       <Route path="/resources" element={<Resources />} />
+      <Route path="/resources/:type" element={<ResourcePage />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

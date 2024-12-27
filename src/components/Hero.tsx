@@ -60,7 +60,7 @@ function Hero() {
                         </div>
                     </div>
 
-                    <div className="lg:w-1/2">
+                    <div className="lg:w-fit">
                         <div className="p-8 bg-gray-800/40 rounded-xl backdrop-blur-sm border border-gray-700/50 shadow-xl hover:border-blue-500/50 transition-all transform hover:-translate-y-1">
                             <Highlight className="javascript">
 
