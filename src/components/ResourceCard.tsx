@@ -4,12 +4,11 @@ import { FC, ReactElement } from 'react';
 interface ResourceCardProps {
   title: string;
   description: string;
-  link: string;
   icon: ReactElement;
   onClick: () => void;
 }
 
-export const ResourceCard: FC<ResourceCardProps> = ({ title, description, link, icon, onClick }) => {
+export const ResourceCard: FC<ResourceCardProps> = ({ title, description, icon, onClick }) => {
   return (
     <div 
       onClick={onClick}
