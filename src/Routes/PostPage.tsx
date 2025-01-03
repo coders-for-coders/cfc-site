@@ -5,36 +5,58 @@ import { useEffect, useState } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { materialDark as theme } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
-interface Resource {
+interface Comment {
   id: string;
-  title: string;
+  author: string;
   content: string;
-  description: string;
-  long_description?: string;
-  type: string;
-  icon: string;
-  path: string;
+  created_at: string;
 }
 
-function ResourcePage() {
+interface PostMetadata {
+  created_at: string;
+  updated_at?: string;
+  type: string;
+  icon?: string;
+  author: string;
+  tags: string[];
+}
+
+interface PostContent {
+  title: string;
+  description: string;
+  long_description?: string;
+  content: string;
+  images?: string[];
+  likes: number;
+  comments: Comment[];
+}
+
+interface Post {
+  id: string;
+  metadata: PostMetadata;
+  content: PostContent;
+}
+
+function PostPage() {
   const { id } = useParams<{ type: string; id: string }>();
-  const [resource, setResource] = useState<Resource | null>(null);
+  const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchResource = async () => {
+    const fetchPost = async () => {
       try {
         setLoading(true);
-        const url = `http://localhost:8000/api/resources/${id}`;
+        
+        const url = `http://localhost:8000/api/data/post/${id}`;
         const response = await fetch(url);
         if (!response.ok) {
-          throw new Error('Failed to fetch resource');
+          throw new Error('Failed to fetch post');
         }
         const data = await response.json();
-        setResource(data);
+        setPost(data);
       } catch (error) {
-        console.error('Error fetching resource:', error);
+        console.error('Error fetching post:', error);
         setError(error instanceof Error ? error.message : 'An error occurred');
       } finally {
         setLoading(false);
@@ -42,12 +64,12 @@ function ResourcePage() {
     };
 
     if (!id) {
-      setError('Resource ID is required');
+      setError('Post ID is required');
       setLoading(false);
       return;
     }
 
-    fetchResource();
+    fetchPost();
   }, [id]);
 
   const getIcon = (iconName: string) => {
@@ -104,11 +126,11 @@ function ResourcePage() {
     );
   }
 
-  if (!resource) {
+  if (!post) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center">
         <div className="text-slate-400 text-xl font-medium bg-slate-800/50 px-10 py-6 rounded-2xl border border-slate-700/30 shadow-2xl backdrop-blur-sm">
-          Resource not found
+          Post not found
         </div>
       </div>
     );
@@ -131,14 +153,14 @@ function ResourcePage() {
           <header className="space-y-12 mb-20">
             <div className="flex items-center gap-8">
               <div className="group p-6 bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 rounded-3xl border border-emerald-500/10 backdrop-blur-sm transition-all duration-300 hover:border-emerald-500/20 hover:shadow-emerald-500/5 hover:shadow-2xl">
-                {getIcon(resource.icon)}
+                {getIcon(post.metadata.icon || '')}
               </div>
               <div className="flex flex-col gap-3">
                 <span className="text-emerald-400/90 text-sm font-semibold tracking-wider uppercase bg-emerald-950/30 px-4 py-1.5 rounded-full w-fit">
-                  {resource.type.charAt(0).toUpperCase() + resource.type.slice(1)} Resource
+                  {post.metadata.type.charAt(0).toUpperCase() + post.metadata.type.slice(1)} Post
                 </span>
                 <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-emerald-300 to-emerald-200">
-                  {resource.title}
+                  {post.content.title}
                 </h1>
               </div>
             </div>
@@ -146,7 +168,7 @@ function ResourcePage() {
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-transparent rounded-2xl" />
               <div className="relative text-xl text-slate-200 pl-10 py-8 leading-relaxed">
-                <div dangerouslySetInnerHTML={{ __html: resource.description }} />
+                <div dangerouslySetInnerHTML={{ __html: post.content.description }} />
               </div>
             </div>
           </header>
@@ -154,12 +176,12 @@ function ResourcePage() {
           <div className="prose prose-invert prose-lg max-w-none">
             <div className="bg-slate-800/40 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-10 shadow-2xl hover:shadow-emerald-500/5 transition-all duration-300">
               <div className="text-slate-200 leading-relaxed text-lg">
-                {formatDescription(resource.long_description || resource.description)}
+                {formatDescription(post.content.long_description || post.content.description)}
               </div>
               
               <div className="mt-12 pt-10 border-t border-slate-700/50">
                 <div className="text-slate-200 leading-relaxed whitespace-pre-line text-lg">
-                  {resource.content}
+                  {post.content.content}
                 </div>
               </div>
             </div>
@@ -170,4 +192,4 @@ function ResourcePage() {
   );
 }
 
-export default ResourcePage;
+export default PostPage;

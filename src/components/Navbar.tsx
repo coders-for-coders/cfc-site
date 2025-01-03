@@ -17,8 +17,8 @@ function Navbar() {
                         <Link to="/projects" className="text-gray-300 hover:text-white transition-colors">
                             Projects
                         </Link>
-                        <Link to="/resources" className="text-gray-300 hover:text-white transition-colors">
-                            Resources
+                        <Link to="/posts" className="text-gray-300 hover:text-white transition-colors">
+                            Posts
                         </Link>
                         <Link to="/login" className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2">
                             <FiLogIn /> Login

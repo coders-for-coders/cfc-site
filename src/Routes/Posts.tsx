@@ -4,44 +4,68 @@ import { FaBookOpen, FaLaptopCode, FaQuestion, FaQuestionCircle, FaGithub } from
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-interface Resource {
+interface Comment {
   id: string;
+  author: string;
+  content: string;
+  created_at: string;
+}
+
+interface PostContent {
   title: string;
   description: string;
   long_description?: string;
-  type: string;
-  icon: string;
-  path: string;
+  content: string;
+  images?: string[];
+  likes: number;
+  comments: Comment[];
 }
 
-function Resources() {
+interface PostMetadata {
+  created_at: string;
+  updated_at?: string;
+  type: string;
+  icon?: string;
+  author: string;
+  tags: string[];
+}
+
+interface Post {
+  id: string;
+  metadata: PostMetadata;
+  content: PostContent;
+}
+
+function Posts() {
   const navigate = useNavigate();
-  const [resources, setResources] = useState<Resource[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchResources = async () => {
+    const fetchPosts = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:8000/api/resources');
+        const response = await fetch('http://localhost:8000/api/data/post');
         if (!response.ok) {
-          throw new Error('Failed to fetch resources');
+          throw new Error('Failed to fetch posts');
         }
         const data = await response.json();
-        setResources(data);
+        setPosts(data);
       } catch (error) {
-        console.error('Error fetching resources:', error);
+        console.error('Error fetching posts:', error);
         setError(error instanceof Error ? error.message : 'An error occurred');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchResources();
+    fetchPosts();
   }, []);
 
-  const getIcon = (iconName: string) => {
+  const getIcon = (iconName: string | undefined) => {
+    if (!iconName) return <FaBookOpen className="text-blue-400 text-4xl" />;
+    
     switch (iconName) {
       case 'FaBookOpen':
         return <FaBookOpen className="text-blue-400 text-4xl" />;
@@ -84,18 +108,32 @@ function Resources() {
       <Navbar />
       
       <div className="relative z-10 container mx-auto px-4 py-16">
-        <h1 className="text-4xl font-bold mb-12 text-white text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">Resources</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {resources.map((resource) => (
-            <ResourceCard
-              key={resource.id}
-              title={resource.title}
-              description={resource.description}
-              icon={getIcon(resource.icon)}
-              onClick={() => navigate(`/resources/${resource.id}`)}
-            />
-          ))}
-        </div>
+        <h1 className="text-5xl font-bold mb-12 text-white text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
+          Posts
+        </h1>
+        {posts.length === 0 ? (
+          <div className="flex flex-col items-center justify-center gap-6">
+            <p className="text-gray-400 text-lg">No posts yet</p>
+            <button
+              onClick={() => navigate('/posts/create')}
+              className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-lg hover:opacity-90 transition-opacity"
+            >
+              Create First Post
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {posts.map((post) => (
+              <ResourceCard
+                key={post.id}
+                title={post.content.title}
+                description={post.content.description}
+                icon={getIcon(post.metadata.icon)}
+                onClick={() => navigate(`/posts/${post.id}`)}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-purple-500/20 rounded-full blur-3xl"></div>
@@ -104,4 +142,4 @@ function Resources() {
   );
 }
 
-export default Resources;
+export default Posts;

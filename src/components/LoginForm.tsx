@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FaDiscord, FaGoogle } from 'react-icons/fa';
+import { FaDiscord, FaGithub } from 'react-icons/fa';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 function LoginForm() {
@@ -29,9 +29,9 @@ function LoginForm() {
         console.log('Discord login clicked');
     };
 
-    const handleGoogleLogin = () => {
-        // TODO: Implement Google OAuth
-        console.log('Google login clicked');
+    const handleGithubLogin = () => {
+        // TODO: Implement Github OAuth
+        console.log('Github login clicked');
     };
 
     const togglePasswordVisibility = () => {
@@ -60,13 +60,17 @@ function LoginForm() {
                             Continue with Discord
                         </button>
 
-                        <button
-                            onClick={handleGoogleLogin}
+                        {/* <button
+                            onClick={handleGithubLogin}
                             className="w-full py-3 bg-white text-gray-800 font-semibold rounded-lg hover:bg-gray-100 transition-colors flex items-center justify-center gap-2"
-                        >
-                            <FaGoogle size={20} />
-                            Continue with Google
-                        </button>
+                        > */}
+                        <div className="w-full py-3 bg-white text-gray-800 font-semibold rounded-lg hover:bg-gray-100 transition-colors flex items-center justify-center gap-2">
+                            <Link to="http://localhost:8000/api/auth/github/login">
+                                <FaGithub size={20} className="text-gray-800" />
+                                Continue with Github
+                            </Link>
+                        </div>
+                        {/* </button> */}
                     </div>
 
                     <div className="relative mb-8">
