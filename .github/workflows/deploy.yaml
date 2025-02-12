@@ -19,19 +19,18 @@ jobs:
           SERVER_IP: ${{ secrets.SERVER_IP }}
           SERVER_USER: ${{ secrets.SERVER_USER }}
         run: |
-          # Create SSH directory and set permissions
+
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
-          
-          # Write private key to file and set permissions
+
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          
-          # Add server to known hosts
+
           ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
-          
-          # Connect and execute commands
+
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << 'ENDSSH'
+            pwd
+            ls -la
             cd ~/cfc-site
             source ~/.nvm/nvm.sh
             nvm use 22
