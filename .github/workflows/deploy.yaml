@@ -28,13 +28,20 @@ jobs:
           ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
 
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << 'ENDSSH'
+            eval $(ssh-agent -s)
+            ssh-add ~/.ssh/github
+            
             if [ ! -d "~/cfc-site" ]; then
+             
               git clone git@github.com:coders-for-coders/cfc-site.git ~/cfc-site
             fi
+
             cd ~/cfc-site
+            git pull
 
             source ~/.nvm/nvm.sh
             nvm use 22
+
             npm install
             npm run build
 
