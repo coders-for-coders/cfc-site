@@ -13,13 +13,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Deploy to Server
+      - name: Set up SSH for VM and GitHub
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
           SERVER_IP: ${{ secrets.SERVER_IP }}
           SERVER_USER: ${{ secrets.SERVER_USER }}
         run: |
-
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
 
@@ -29,13 +28,16 @@ jobs:
           ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
 
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << 'ENDSSH'
-            pwd
-            ls -la
+            if [ ! -d "~/cfc-site" ]; then
+              git clone git@github.com:coders-for-coders/cfc-site.git ~/cfc-site
+            fi
             cd ~/cfc-site
+
             source ~/.nvm/nvm.sh
             nvm use 22
             npm install
             npm run build
+
             pm2 delete cfc-site || true
             pm2 start pm2.json
           ENDSSH
