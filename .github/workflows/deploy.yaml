@@ -45,6 +45,6 @@ jobs:
             npm install
             npm run build
 
-            pm2 delete cfc-site || true
-            pm2 start pm2.json
+            ~/cfc-site/node_modules/.bin/pm2 delete cfc-site || true
+            ~/cfc-site/node_modules/.bin/pm2 start pm2.json
           ENDSSH
