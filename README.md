@@ -1,1 +1,1 @@
-# https://www.codersforcoders.tech
+https://www.codersforcoders.tech
