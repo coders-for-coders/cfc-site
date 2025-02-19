@@ -45,6 +45,11 @@ jobs:
             npm install
             npm run build
 
-            ~/cfc-site/node_modules/.bin/pm2 delete cfc-site || true
-            ~/cfc-site/node_modules/.bin/pm2 start pm2.json
+            if pm2 list | grep -q "cfc-site"; then
+              pm2 restart cfc-site
+            else
+              pm2 start npm --name "cfc-site" -- start -- -p 3000
+            fi
+            pm2 save
+            sudo systemctl reload nginx
           ENDSSH
